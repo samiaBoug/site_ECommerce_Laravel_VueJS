@@ -7,63 +7,91 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected $productRepo ;
+    protected $productRepo;
+
     public function __construct(ProductRepository $productRepo)
     {
-        $this->productRepo = $productRepo ;
+        $this->productRepo = $productRepo;
     }
 
+    /**
+     * Afficher la liste des produits.
+     */
     public function index()
     {
-        $products = $this->productRepo->all() ;
-        return response()->json([]);
+        $products = $this->productRepo->all();
+        return response()->json([
+            'success' => true,
+            'products' => $products
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Stocker un nouveau produit.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "name" => 'required|string|max:255',
+            "description" => 'required|string',
+            "price" => 'required|integer'
+        ]);
+
+        $product = $this->productRepo->create($request);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Produit créé avec succès.',
+            'product' => $product
+        ]);
     }
 
     /**
-     * Display the specified resource.
+     * Mettre à jour un produit existant.
      */
-    public function show()
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "name" => 'required|string|max:255',
+            "description" => 'required|string',
+            "price" => 'required|integer'
+        ]);
+
+        $product = $this->productRepo->find($id);
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produit non trouvé.'
+            ], 404);
+        }
+
+        $updatedProduct = $this->productRepo->update($id, $request);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Produit mis à jour avec succès.',
+            'product' => $updatedProduct
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Supprimer un produit.
      */
-    public function edit()
+    public function destroy($id)
     {
-        //
-    }
+        $product = $this->productRepo->find($id);
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Produit non trouvé.'
+            ], 404);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request,  $product)
-    {
-        //
-    }
+        $this->productRepo->delete($id);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy( $product)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Produit supprimé avec succès.'
+        ]);
     }
 }
