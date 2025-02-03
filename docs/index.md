@@ -1,16 +1,20 @@
-# Page d'accueil
+# Home Page
 
-Bienvenue sur le rapport du projet. Ce document est une présentation des travaux réalisés dans le cadre de notre projet, avec un aperçu des objectifs, des étapes et des résultats obtenus.
+Welcome to the project report. This document is a presentation of the work carried out within the framework of our project, with an overview of the objectives, steps and results obtained.
 
-## Réalisé par :
+## Realized by:
 
-### **Zakaria Azizi**
+### **Suirita Fahd**
+### **Azizi Zakaria**
+### **Bougtoub Samia**
+### **Tamraoui Abdelouahab**
 
-## Encadré par :
 
-### **M. Fouad ESSARRAJ**
+## Supervised by:
 
-## Liens utiles
+### **Mr. Fouad ESSARRAJ**
 
-- [Rapport du projet](./rapport/index.md)
-- [Présentation du projet](./presentation/index.html)
+## Useful Links
+
+- [Project Rapport](./rapport/index.html)
+- [Project Presentation](./presentation/index.html)
