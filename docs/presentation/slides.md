@@ -5,7 +5,11 @@
 
 ## **Watches E-commerce**
 
-- Présenté par: SUIRITA Fahd
+- Présenté par: 
+    - SUIRITA Fahd
+    - BOUGTOUB Samia
+    - AZIZI Zakaria
+    - TAMRAOUI Abdelouahab
 - Encadré par: ESSARRAJ Fouad
 
 ---
@@ -129,7 +133,9 @@
 
 - Tailwind CSS
 - Ajax
+- VueJS
 - Laravel
+- Breeze
 - MySQL
 
 |||
