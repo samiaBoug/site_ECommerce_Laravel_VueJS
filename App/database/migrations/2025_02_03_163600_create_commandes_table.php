@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('commandes', function (Blueprint $table) {
             $table->id();
             $table->string("phone_telephone")->nullable();
-            $table->foreignId('user_id')->nullable()->constrained('utilisateurs')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('produits')->onDelete('cascade');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->integer('quantity')->default(1);
             $table->timestamps();
         });
