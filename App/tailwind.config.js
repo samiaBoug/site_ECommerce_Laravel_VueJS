@@ -8,6 +8,8 @@ module.exports = {
     './components/**/*.{js,jsx,vue}',
     './app/**/*.{js,jsx,vue}',
     './src/**/*.{js,jsx,vue}',
+    "./resources/**/*.vue",
+    "./resources/**/*.js",
 	],
   prefix: "",
   theme: {

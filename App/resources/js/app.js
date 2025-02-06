@@ -1,11 +1,9 @@
 import "./bootstrap";
-import Alpine from "alpinejs";
-
-window.Alpine = Alpine;
-Alpine.start();
 
 import router from "./router";
 import { createApp } from "vue";
+import { createPinia } from "pinia";
 import App from "./App.vue";
+const pinia = createPinia()
 
-createApp(App).use(router).mount("#app");
+createApp(App).use(router).use(pinia).mount("#app");

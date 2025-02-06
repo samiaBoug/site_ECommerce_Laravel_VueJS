@@ -11,7 +11,7 @@ class ProductRepository
      */
     public function all()
     {
-        return Product::all();
+        return  Product::all();
     }
 
     /**
