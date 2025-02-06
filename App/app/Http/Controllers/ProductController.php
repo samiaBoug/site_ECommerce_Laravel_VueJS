@@ -19,8 +19,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return $this->productRepo->all(false);
-
+        $products = $this->productRepo->all();
+        return response()->json([
+            'success' => true,
+            'products' => $products
+        ]);
     }
 
     /**

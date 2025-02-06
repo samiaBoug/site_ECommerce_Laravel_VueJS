@@ -1,17 +1,22 @@
 import { createRouter, createWebHistory } from "vue-router";
+import Home from "./Pages/Home.vue"; // Le layout principal
+import Products from "./Pages/Product.vue";
 
 const routes = [
     {
         path: "/",
-        component: () => import("./Pages/HomeRoute.vue"),
+        component: Home, // Layout principal
+        redirect: "/products", // Redirection vers Produits par défaut
+        children: [
+            { path: "products", component: Products },
+           
+        ],
     },
-   {
-    path: '/products',
-    component: ()=>import('./Pages/Product.vue')
-   }
 ];
 
-export default createRouter({
+const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+export default router;

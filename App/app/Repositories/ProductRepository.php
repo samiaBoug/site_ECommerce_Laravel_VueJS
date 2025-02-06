@@ -9,9 +9,9 @@ class ProductRepository
     /**
      * Récupérer tous les produits.
      */
-    public function all($paginate=false)
+    public function all()
     {
-        return $paginate ? Product::paginate(5) : Product::all();
+        return  Product::all();
     }
 
     /**

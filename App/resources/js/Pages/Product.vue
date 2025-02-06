@@ -1,384 +1,218 @@
 <script setup>
-// Imports
 import { ref, onMounted } from "vue";
-//import { useAuthStore } from "../stores/authStore";
-import { useProductsStore } from "../stores/ProductsStore";
+import { useProductsStore } from "@/stores/ProductsStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
-import * as z from "zod"; // Zod for schema validation
+import * as z from "zod";
 
-// Importing components from shadcn/ui and lucide-vue-next
-//import { Aside } from "@/components/ui/aside";
 import { FormLabel } from "@/components/ui/form";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-//import { TooltipProvider } from "@/components/ui/tooltip";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-} from "@/components/ui/dialog";
-import {
-    CircleUser,
-    File,
-    Home,
-    MoreHorizontal,
-    Package,
-    PanelLeft,
-    PlusCircle,
-} from "lucide-vue-next";
+import { PlusCircle, File } from "lucide-vue-next";
 
-// Initializing stores
-const products = useProductsStore(); // Store for products
-//const authStore = useAuthStore(); // Store for authentication
+const products = useProductsStore();
 
-// Defining the form schema for product validation
 const formSchema = toTypedSchema(
     z.object({
-        name: z
-            .string()
-            .min(2)
-            .max(50, "Name must be between 2 and 50 characters"),
-        description: z
-            .string()
-            .min(2)
-            .max(50, "Description must be between 2 and 50 characters"),
-        price: z
-            .number()
-            .min(1)
-            .max(10000, "Price must be between 1 and 10,000"),
-    }),
+        name: z.string().min(2).max(50, "Le nom doit contenir entre 2 et 50 caractères"),
+        description: z.string().min(2).max(100, "La description doit contenir entre 2 et 100 caractères"),
+        price: z.number().min(1).max(10000, "Le prix doit être entre 1 et 10 000"),
+    })
 );
 
-// Form state
-const { isFieldDirty, handleSubmit } = useForm({
-    validationSchema: formSchema,
-});
-
-// Fetch products when the component mounts
-onMounted(async () => {
-    await products.fetchProducts(); // Fetch the list of products from the server
-});
-
-// Dialog state
+const { handleSubmit } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Function to handle form submission
+// Nouveaux états pour le dialogue de modification et de suppression
+const isEditDialogOpen = ref(false);
+const isDeleteDialogOpen = ref(false);
+const productToEdit = ref(null);
+const productToDelete = ref(null);
+
+onMounted(async () => {
+    await products.fetchProducts();
+});
+
 const onSubmit = async (values) => {
     try {
-        await products.addProduct(values); // Add product using the store action
-        isDialogOpen.value = false; // Close the dialog
+        await products.addProduct(values);
+        isDialogOpen.value = false;
     } catch (error) {
-        console.error("Error adding product:", error);
+        console.error("Erreur lors de l'ajout du produit:", error);
     }
 };
 
-// Function to delete a product
+// Fonction d'ouverture du dialogue de modification et préparation du formulaire
+const editProduct = (product) => {
+    productToEdit.value = { ...product }; // création d'une copie
+    isEditDialogOpen.value = true;
+};
+
+// Soumission du formulaire de modification
+const onUpdateSubmit = async (values) => {
+    try {
+        // Assurez-vous d'avoir implémenté la méthode updateProduct dans votre store
+        await products.updateProduct(productToEdit.value.id, values);
+        isEditDialogOpen.value = false;
+        await products.fetchProducts();
+    } catch (error) {
+        console.error("Erreur lors de la modification du produit:", error);
+    }
+};
+
+// Ouverture du dialogue de suppression
+const confirmDelete = (product) => {
+    productToDelete.value = product;
+    isDeleteDialogOpen.value = true;
+};
+
 const deleteProduct = async (productId) => {
     try {
-        await products.deleteProduct(productId); // Delete product using the store action
-        await products.fetchProducts(); // Fetch the list of products from the server
+        await products.deleteProduct(productId);
+        await products.fetchProducts();
     } catch (error) {
-        console.error("Error deleting product:", error);
+        console.error("Erreur lors de la suppression du produit:", error);
     }
 };
 
-// Logout function for the user
-//const logout = async () => await authStore.logout();
+// Confirmer la suppression depuis le dialogue
+const deleteConfirmed = async () => {
+    await deleteProduct(productToDelete.value.id);
+    isDeleteDialogOpen.value = false;
+};
 </script>
 
 <template>
-  
-        <!-- Main container -->
-        <div class="flex min-h-screen w-full flex-col bg-muted/40">
-            <!-- Sidebar -->
-
-
-            <!-- Main content area -->
-            <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-                <!-- Header section -->
-                <header
-                    class="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6"
-                >
-                    <!-- Menu for small screens -->
-                    <Sheet>
-                        <SheetTrigger as-child>
-                            <Button
-                                size="icon"
-                                variant="outline"
-                                class="sm:hidden"
-                            >
-                                <PanelLeft class="h-5 w-5" />
-                                <span class="sr-only">Toggle Menu</span>
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent side="left" class="sm:max-w-xs">
-                            <nav class="grid gap-6 text-lg font-medium">
-                                <!-- Navigation links -->
-                                <a
-                                    href="#"
-                                    class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                                >
-                                    <Home class="h-5 w-5" /> Dashboard
-                                </a>
-                                <a
-                                    href="#"
-                                    class="flex items-center gap-4 px-2.5 text-foreground"
-                                >
-                                    <Package class="h-5 w-5" /> Products
-                                </a>
-                            </nav>
-                        </SheetContent>
-                    </Sheet>
-
-                    <!-- User Menu -->
-                    <div class="ml-auto"></div>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger as-child>
-                            <Button
-                                variant="secondary"
-                                size="icon"
-                                class="rounded-full"
-                            >
-                                <CircleUser class="h-5 w-5" />
-                                <span class="sr-only">Toggle user menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem @click="logout"
-                                >Logout</DropdownMenuItem
-                            >
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </header>
-
-                <!-- Main tabs and content -->
-                <main
-                    class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8"
-                >
-                    <!-- Table displaying products -->
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Products</CardTitle>
-                            <CardDescription>
-                                Manage your products
-                            </CardDescription>
-
-                            <div class="flex items-center">
-                                <!-- Actions like exporting data and adding new products -->
-                                <div class="ml-auto flex items-center gap-2">
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        class="h-7 gap-1"
-                                    >
-                                        <File class="h-3.5 w-3.5" />
-                                        <span class="sr-only sm:not-sr-only"
-                                            >Export</span
-                                        >
-                                    </Button>
-
-                                    <!-- Add Product Button -->
-                                    <Dialog v-model:open="isDialogOpen">
-                                        <DialogTrigger as-child>
-                                            <Button size="sm" class="h-7 gap-1">
-                                                <PlusCircle
-                                                    class="h-3.5 w-3.5"
-                                                />
-                                                <span
-                                                    class="sr-only sm:not-sr-only"
-                                                    >Add Product</span
-                                                >
-                                            </Button>
-                                        </DialogTrigger>
-
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle
-                                                    >Add New
-                                                    Product</DialogTitle
-                                                >
-                                                <DialogDescription
-                                                    >Fill in the details to add
-                                                    a new
-                                                    product.</DialogDescription
-                                                >
-                                            </DialogHeader>
-
-                                            <!-- Add Product Form -->
-                                            <Form
-                                                :validation-schema="formSchema"
-                                                @submit="onSubmit"
-                                                class="space-y-2"
-                                            >
-                                                <Field name="name" class="mt-2">
-                                                    <template
-                                                        #default="{
-                                                            field,
-                                                            meta,
-                                                        }"
-                                                    >
-                                                        <FormLabel for="name"
-                                                            >Product
-                                                            Name</FormLabel
-                                                        >
-                                                        <Input
-                                                            v-bind="field"
-                                                            type="text"
-                                                            placeholder="Product Name"
-                                                            id="name"
-                                                        />
-                                                        <span
-                                                            v-if="
-                                                                meta.touched &&
-                                                                meta.error
-                                                            "
-                                                            class="text-red-500"
-                                                            >{{
-                                                                meta.error
-                                                            }}</span
-                                                        >
-                                                    </template>
-                                                </Field>
-
-                                                <Field name="description">
-                                                    <template
-                                                        #default="{
-                                                            field,
-                                                            meta,
-                                                        }"
-                                                    >
-                                                        <FormLabel
-                                                            >Product
-                                                            Description</FormLabel
-                                                        >
-                                                        <Textarea
-                                                            v-bind="field"
-                                                            placeholder="Product Description"
-                                                        />
-                                                        <span
-                                                            v-if="
-                                                                meta.touched &&
-                                                                meta.error
-                                                            "
-                                                            class="text-red-500"
-                                                            >{{
-                                                                meta.error
-                                                            }}</span
-                                                        >
-                                                    </template>
-                                                </Field>
-
-                                                <Field name="price">
-                                                    <template
-                                                        #default="{
-                                                            field,
-                                                            meta,
-                                                        }"
-                                                    >
-                                                        <FormLabel
-                                                            >Product
-                                                            Price</FormLabel
-                                                        >
-                                                        <Input
-                                                            v-bind="field"
-                                                            type="number"
-                                                            placeholder="Product Price"
-                                                        />
-                                                        <span
-                                                            v-if="
-                                                                meta.touched &&
-                                                                meta.error
-                                                            "
-                                                            class="text-red-500"
-                                                            >{{
-                                                                meta.error
-                                                            }}</span
-                                                        >
-                                                    </template>
-                                                </Field>
-
-                                                <Button
-                                                    type="submit"
-                                                    class="mt-4"
-                                                >
-                                                    Add Product
-                                                </Button>
-                                            </Form>
-                                        </DialogContent>
-                                    </Dialog>
-                                </div>
-                            </div>
-                        </CardHeader>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Product</TableHead>
-                                    <TableHead>Description</TableHead>
-                                    <TableHead>Price</TableHead>
-                                    <TableHead>Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                <TableRow
-                                    v-for="product in products.data"
-                                    :key="product.id"
-                                >
-                                    <TableCell>{{ product.name }}</TableCell>
-                                    <TableCell>{{
-                                        product.description
-                                    }}</TableCell>
-                                    <TableCell>{{ product.price }}</TableCell>
-                                    <TableCell>
-                                        <Button
-                                            variant="outline"
-                                            @click="deleteProduct(product.id)"
-                                            class="bg-red-500 hover:bg-red-600 text-white hover:text-white"
-                                        >
-                                            Delete
+    <div class="flex min-h-screen w-full flex-col bg-muted/40">
+        <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
+            <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Produits</CardTitle>
+                        <div class="flex items-center">
+                            <div class="ml-auto flex items-center gap-2">
+                                <Button size="sm" variant="outline" class="h-7 gap-1">
+                                    <File class="h-3.5 w-3.5" />
+                                    <span class="sr-only sm:not-sr-only">Exporter</span>
+                                </Button>
+                                <Dialog v-model:open="isDialogOpen">
+                                    <DialogTrigger as-child>
+                                        <Button size="sm" class="h-7 gap-1">
+                                            <PlusCircle class="h-3.5 w-3.5" />
+                                            <span class="sr-only sm:not-sr-only">Ajouter un produit</span>
                                         </Button>
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </Card>
-                </main>
-            </div>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Ajouter un produit</DialogTitle>
+                                            <DialogDescription>Remplissez les détails du produit.</DialogDescription>
+                                        </DialogHeader>
+                                        <Form @submit="onSubmit" class="space-y-2">
+                                            <Field name="name" v-slot="{ field, meta }">
+                                                <FormLabel for="name">Nom du produit</FormLabel>
+                                                <Input v-bind="field" type="text" placeholder="Nom du produit" id="name" />
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
+                                            <Field name="description" v-slot="{ field, meta }">
+                                                <FormLabel>Description</FormLabel>
+                                                <Textarea v-bind="field" placeholder="Description du produit" />
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
+                                            <Field name="price" v-slot="{ field, meta }">
+                                                <FormLabel>Prix</FormLabel>
+                                                <Input v-bind="field" type="number" placeholder="Prix du produit" />
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
+                                            <Button type="submit" class="mt-4">Ajouter</Button>
+                                        </Form>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Nom</TableHead>
+                                <TableHead>Description</TableHead>
+                                <TableHead>Prix</TableHead>
+                                <TableHead>Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            <TableRow v-for="product in products.data" :key="product.id">
+                                <TableCell>{{ product.name }}</TableCell>
+                                <TableCell>{{ product.description }}</TableCell>
+                                <TableCell>{{ product.price }} MAD</TableCell>
+                                <TableCell class="flex gap-2">
+                                    <Button
+                                        variant="outline"
+                                        @click="editProduct(product)"
+                                        class="bg-gray-500 hover:bg-gray-600 text-white border border-gray-600 rounded px-4 py-2 transition duration-200"
+                                    >
+                                        Modifier
+                                    </Button>
+                                    <Button variant="outline" @click="confirmDelete(product)" class="bg-red-500 hover:bg-red-600 text-white">
+                                        Supprimer
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </Card>
+            </main>
         </div>
 
+        <!-- Dialogue de modification -->
+        <Dialog v-model:open="isEditDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Modifier le produit</DialogTitle>
+                    <DialogDescription>Modifiez les informations du produit.</DialogDescription>
+                </DialogHeader>
+                <!-- Utilisation d'un formulaire pour la modification -->
+                <Form @submit="onUpdateSubmit" :initial-values="productToEdit" class="space-y-2">
+                    <Field name="name" v-slot="{ field, meta }">
+                        <FormLabel for="edit-name">Nom du produit</FormLabel>
+                        <Input v-bind="field" type="text" v-model="productToEdit.name" id="edit-name" />
+                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                    </Field>
+                    <Field name="description" v-slot="{ field, meta }">
+                        <FormLabel>Description</FormLabel>
+                        <Textarea v-bind="field" placeholder="Description du produit" v-model="productToEdit.description"/>
+                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                    </Field>
+                    <Field name="price" v-slot="{ field, meta }">
+                        <FormLabel>Prix</FormLabel>
+                        <Input v-bind="field" type="number" placeholder="Prix du produit" v-model="productToEdit.price"/>
+                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                    </Field>
+                    <div class="flex justify-end gap-2 mt-4">
+                        <Button variant="outline" @click="isEditDialogOpen = false">Annuler</Button>
+                        <Button type="submit">Modifier</Button>
+                    </div>
+                </Form>
+            </DialogContent>
+        </Dialog>
+
+        <!-- Dialogue de confirmation pour suppression -->
+        <Dialog v-model:open="isDeleteDialogOpen">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Confirmer la suppression</DialogTitle>
+                    <DialogDescription>
+                        Êtes-vous sûr de vouloir supprimer ce produit ?
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="flex justify-end gap-2 mt-4">
+                    <Button variant="outline" @click="isDeleteDialogOpen = false">Annuler</Button>
+                    <Button variant="destructive" @click="deleteConfirmed">Supprimer</Button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    </div>
 </template>

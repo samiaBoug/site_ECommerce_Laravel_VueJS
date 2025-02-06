@@ -7,8 +7,8 @@ export const useProductsStore = defineStore("products", () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get("/products");
-            data.value = response.data;
+            const response = await axios.get("/api/products");
+            data.value = response.data.products;
         } catch (error) {
             console.error("Error fetching products:", error);
         }
@@ -34,6 +34,15 @@ export const useProductsStore = defineStore("products", () => {
             console.error("Error deleting product:", error);
         }
     };
+    const updateProduct = async (productId, updatedData) => {
+        try {
+            const response = await axios.put(`/products/${productId}`, updatedData);
+            return response.data;
+        } catch (error) {
+            console.error("Error updating product:", error);
+            throw error;
+        }
+    };
 
-    return { data, fetchProducts, addProduct, deleteProduct };
+    return { data, fetchProducts, addProduct, deleteProduct , updateProduct};
 });
