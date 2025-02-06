@@ -5,10 +5,10 @@ const routes = [
         path: "/",
         component: () => import("./Pages/HomeRoute.vue"),
     },
-    {
-        path: "/test",
-        component: () => import('./Pages/TestRoutes.vue'),
-    },
+   {
+    path: '/products',
+    component: ()=>import('./Pages/Product.vue')
+   }
 ];
 
 export default createRouter({
