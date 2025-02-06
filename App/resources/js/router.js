@@ -9,7 +9,7 @@ const routes = [
         redirect: "/products", // Redirection vers Produits par défaut
         children: [
             { path: "products", component: Products },
-           
+
         ],
     },
 ];

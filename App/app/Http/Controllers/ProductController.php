@@ -32,9 +32,11 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "name" => 'required|string|max:255',
+            "name"        => 'required|string|max:255',
             "description" => 'required|string',
-            "price" => 'required|integer'
+            "price"       => 'required|numeric', // Pour un float, utilisez numeric
+            "category_id" => 'required|exists:categories,id', // Vérifie que la catégorie existe
+            "quantity"    => 'sometimes|integer|min:1'
         ]);
 
         $product = $this->productRepo->create($request);
@@ -52,9 +54,11 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            "name" => 'required|string|max:255',
+            "name"        => 'required|string|max:255',
             "description" => 'required|string',
-            "price" => 'required|integer'
+            "price"       => 'required|numeric', // Pour un float, utilisez numeric
+            "category_id" => 'required|exists:categories,id', // Vérifie que la catégorie existe
+            "quantity"    => 'sometimes|integer|min:1'
         ]);
 
         $product = $this->productRepo->find($id);

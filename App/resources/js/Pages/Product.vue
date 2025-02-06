@@ -127,6 +127,22 @@ const deleteConfirmed = async () => {
                                                 <Input v-bind="field" type="number" placeholder="Prix du produit" />
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
+                                            <Field name="quantity" v-slot="{ field, meta }">
+                                                <FormLabel for="quantity">Quantité :</FormLabel>
+                                                <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" />
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
+
+                                            <Field name="category_id" v-slot="{ field, meta }">
+                                                <FormLabel for="category_id">Catégorie :</FormLabel>
+                                                <select v-bind="field" id="category_id" class="border p-2 rounded">
+                                                    <option value="">Sélectionnez une catégorie</option>
+                                                    <option value="homme">Homme</option>
+                                                    <option value="femme">Femme</option>
+                                                </select>
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
+                                            <br>
                                             <Button type="submit" class="mt-4">Ajouter</Button>
                                         </Form>
                                     </DialogContent>
@@ -191,6 +207,22 @@ const deleteConfirmed = async () => {
                         <Input v-bind="field" type="number" placeholder="Prix du produit" v-model="productToEdit.price"/>
                         <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                     </Field>
+                    <Field name="quantity" v-slot="{ field, meta }">
+                        <FormLabel for="quantity">Quantité :</FormLabel>
+                        <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" />
+                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                    </Field>
+
+                    <Field name="category_id" v-slot="{ field, meta }">
+                        <FormLabel for="category_id">Catégorie :</FormLabel>
+                        <select v-bind="field" id="category_id" class="border p-2 rounded">
+                            <option value="">Sélectionnez une catégorie</option>
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                        </select>
+                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                    </Field>
+
                     <div class="flex justify-end gap-2 mt-4">
                         <Button variant="outline" @click="isEditDialogOpen = false">Annuler</Button>
                         <Button type="submit">Modifier</Button>
