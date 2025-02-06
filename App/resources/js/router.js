@@ -7,7 +7,9 @@ const routes = [
     },
     {
         path: "/test",
+
         component: () => import('./Pages/TestRoutes.vue'),
+
     },
 ];
 
