@@ -1,6 +1,6 @@
 <template>
     <div class="bg-beige h-screen flex flex-col">
-        <!-- Flex container for the three main sections (left, center, right) -->
+        <!-- Flex container for the three main sections (left, center, right) --> 
         <div
             class="relative flex flex-row justify-between items-center h-screen w-full gap-8"
         >
