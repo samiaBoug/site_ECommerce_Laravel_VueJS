@@ -1,24 +1,27 @@
 <?php
 
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController; // Add UserController
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// web.php
+
 Route::prefix('api')->group(function () {
     Route::resource('products', ProductController::class);
+    Route::resource('users', UserController::class); // Add API routes for users
 });
 
-// La route catch-all pour Vue doit rester à la fin
+
 Route::get('/{vue_capture?}', function () {
     return view('welcome');
 })->where('vue_capture', '[\/\w\.-]*');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::resource('/products', ProductController::class);
+
+// Routes for user management (e.g., dashboard)
+Route::resource('/users', UserController::class); // Add resource route for users
 
 Route::get('/dashboard', function () {
     return view('dashboard');
