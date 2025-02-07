@@ -115,6 +115,11 @@ const deleteConfirmed = async () => {
                                                 <Input v-bind="field" type="email" placeholder="Email de l'utilisateur" />
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
+                                            <Field name="password" v-slot="{ field, meta }">
+                                                <FormLabel>Mot de passe</FormLabel>
+                                                <Input v-bind="field" type="password" placeholder="Mot de passe de l'utilisateur" />
+                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            </Field>
                                             <Field name="role" v-slot="{ field, meta }">
                                                 <FormLabel for="role">Rôle :</FormLabel>
                                                 <Input v-bind="field" type="text" placeholder="Rôle de l'utilisateur" id="role" />

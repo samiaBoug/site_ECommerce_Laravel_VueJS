@@ -59,6 +59,7 @@ class UserRepository
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => bcrypt($validatedData['password']),
+            'role' => $validatedData['role']
         ]);
     }
 

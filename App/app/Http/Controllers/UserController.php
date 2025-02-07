@@ -35,6 +35,7 @@ class UserController extends Controller
             "name"  => 'required|string|max:255',
             "email" => 'required|email|unique:users,email',
             "password" => 'required|string|min:6',
+            "role" => 'required|string|max:255'
         ]);
 
         $user = $this->userRepo->create($validatedData);
@@ -43,7 +44,7 @@ class UserController extends Controller
             'success' => true,
             'message' => 'Utilisateur créé avec succès.',
             'user' => $user
-        ]);
+        ],);
     }
 
     /**
@@ -63,7 +64,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Utilisateur non trouvé.'
-            ], 404);
+            ], 201);
         }
 
         return response()->json([
@@ -84,7 +85,7 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Utilisateur non trouvé.'
-            ], 404);
+            ], 201);
         }
 
         return response()->json([
