@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./Pages/admin/Home.vue"; // Le layout principal
+import Home from "./Pages/admin/Layout.vue"; // Le layout principal
 import Products from "./Pages/admin/Product.vue";
 import Users from "./Pages/admin/Users.vue"; // Import du composant Users
 

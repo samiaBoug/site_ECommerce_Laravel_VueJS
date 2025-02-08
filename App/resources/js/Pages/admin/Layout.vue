@@ -30,7 +30,7 @@ const isSidebarOpen = ref(false);
                         <router-link to="/" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                             <Home class="h-5 w-5" /> Home
                         </router-link>
-                        <router-link to="" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                        <router-link to="/dashboard" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                             Dashboard
                         </router-link>
                     </nav>
@@ -40,7 +40,7 @@ const isSidebarOpen = ref(false);
             <!-- Navigation principale -->
             <nav class="hidden sm:flex gap-6 text-lg font-medium">
                 <router-link to="/" class="text-muted-foreground hover:text-foreground">Home</router-link>
-                <router-link to="" class="text-muted-foreground hover:text-foreground">Dashboard</router-link>
+                <router-link to="/dashboard" class="text-muted-foreground hover:text-foreground">Dashboard</router-link>
             </nav>
 
             <div class="ml-auto"></div>
@@ -63,7 +63,7 @@ const isSidebarOpen = ref(false);
                     <router-link to="/products" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                         <Package class="h-5 w-5" /> Produits
                     </router-link>
-                    <router-link to="" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                    <router-link to="/users" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                         <Users class="h-5 w-5" /> Utilisateurs
                     </router-link>
                     <router-link to="" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
