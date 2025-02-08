@@ -53,7 +53,11 @@
                     style="animation: bounceFromMiddle 2s infinite"
                 >
                     <span class="text-xl">EXPLORE</span>
-                    <img src="../../../assets/Arrow_down.png" alt="Arrow - Down" class="w-6" />
+                    <img
+                        src="../../../assets/Arrow_down.png"
+                        alt="Arrow - Down"
+                        class="w-6"
+                    />
                 </div>
             </div>
 
