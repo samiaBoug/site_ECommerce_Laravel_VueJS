@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProductsStore } from "@/stores/ProductsStore";
+import { useCategoriesStore } from "@/stores/CategoriesStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -15,6 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, File } from "lucide-vue-next";
 
 const products = useProductsStore();
+const categories = useCategoriesStore();
+
 
 const formSchema = toTypedSchema(
     z.object({
@@ -36,6 +39,9 @@ const productToDelete = ref(null);
 onMounted(async () => {
     await products.fetchProducts();
 });
+onMounted(async ()=>{
+    await categories.fetchCategories()
+})
 
 const onSubmit = async (values) => {
     try {
@@ -137,8 +143,8 @@ const deleteConfirmed = async () => {
                                                 <FormLabel for="category_id">Catégorie :</FormLabel>
                                                 <select v-bind="field" id="category_id" class="border p-2 rounded">
                                                     <option value="">Sélectionnez une catégorie</option>
-                                                    <option value="homme">Homme</option>
-                                                    <option value="femme">Femme</option>
+                                                    <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+
                                                 </select>
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
@@ -155,7 +161,9 @@ const deleteConfirmed = async () => {
                             <TableRow>
                                 <TableHead>Nom</TableHead>
                                 <TableHead>Description</TableHead>
+                                <TableHead>Categorie</TableHead>
                                 <TableHead>Prix</TableHead>
+                                <TableHead>Quantite</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -163,7 +171,9 @@ const deleteConfirmed = async () => {
                             <TableRow v-for="product in products.data" :key="product.id">
                                 <TableCell>{{ product.name }}</TableCell>
                                 <TableCell>{{ product.description }}</TableCell>
+                                <TableCell>{{  }}</TableCell>
                                 <TableCell>{{ product.price }} MAD</TableCell>
+                                <TableCell>{{ product.quantity }}</TableCell>
                                 <TableCell class="flex gap-2">
                                     <Button
                                         variant="outline"

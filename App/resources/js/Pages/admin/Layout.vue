@@ -60,10 +60,10 @@ const isSidebarOpen = ref(false);
             <!-- Sidebar -->
             <aside class="hidden sm:flex w-64 flex-col border-r p-4">
                 <nav class="space-y-4">
-                    <router-link to="/products" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                    <router-link to="/admin/products" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                         <Package class="h-5 w-5" /> Produits
                     </router-link>
-                    <router-link to="/users" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
+                    <router-link to="/admin/users" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">
                         <Users class="h-5 w-5" /> Utilisateurs
                     </router-link>
                     <router-link to="" class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground">

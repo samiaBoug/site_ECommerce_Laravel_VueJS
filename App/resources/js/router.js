@@ -5,9 +5,9 @@ import Users from "./Pages/admin/Users.vue"; // Import du composant Users
 
 const routes = [
     {
-        path: "/",
+        path: "/admin",
         component: Home,
-        redirect: "/products",
+        redirect: "/admin/products",
         children: [
             { path: "products", component: Products },
             { path: "users", component: Users }, // Correctement placé dans les enfants de Home
@@ -27,7 +27,12 @@ const routes = [
         path: "/login",
         name: "login",
         component: () => import("./Pages/auth/Login.vue")
-    }
+    },
+    {
+        path: "/",
+        name: "home",
+        component: () => import("./Pages/public/HomeRoute.vue")
+    },
 ];
 
 const router = createRouter({
