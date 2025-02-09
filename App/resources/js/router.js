@@ -16,7 +16,7 @@ const routes = [
     {
         path: "/user/profile",
         name: "user.profile",
-        component: () => import("./Pages/user/userProfile.vue")
+        component: () => import("./Pages/client/ClientProfile.vue")
     },
     {
         path: "/register", // Correction de la faute de frappe
