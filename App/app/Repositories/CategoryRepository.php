@@ -6,7 +6,7 @@ use App\Models\Category;
 class CategoryRepository{
 
     public function all(){
-        Category::all();
+        return Category::all();
     }
 
     public function find($id){

@@ -30,7 +30,6 @@ const formSchema = toTypedSchema(
 const { handleSubmit } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Nouveaux états pour le dialogue de modification et de suppression
 const isEditDialogOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const productToEdit = ref(null);
@@ -38,10 +37,15 @@ const productToDelete = ref(null);
 
 onMounted(async () => {
     await products.fetchProducts();
+    await categories.fetchCategories();
+
 });
-onMounted(async ()=>{
-    await categories.fetchCategories()
-})
+
+const getCategoryName = (categoryId) => {
+    const category = categories.data.find((cat) => cat.id === categoryId);
+    return category ? category.name : "Non défini";
+};
+
 
 const onSubmit = async (values) => {
     try {
@@ -134,17 +138,15 @@ const deleteConfirmed = async () => {
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
                                             <Field name="quantity" v-slot="{ field, meta }">
-                                                <FormLabel for="quantity">Quantité :</FormLabel>
-                                                <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                                <FormLabel>Quantité</FormLabel>
+                                                <Input v-bind="field" type="number" placeholder="Quantité" />
+                                            <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
-
                                             <Field name="category_id" v-slot="{ field, meta }">
-                                                <FormLabel for="category_id">Catégorie :</FormLabel>
-                                                <select v-bind="field" id="category_id" class="border p-2 rounded">
+                                                <FormLabel>Catégorie</FormLabel>
+                                                <select v-bind="field" class="border p-2 rounded">
                                                     <option value="">Sélectionnez une catégorie</option>
                                                     <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-
                                                 </select>
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
@@ -171,7 +173,7 @@ const deleteConfirmed = async () => {
                             <TableRow v-for="product in products.data" :key="product.id">
                                 <TableCell>{{ product.name }}</TableCell>
                                 <TableCell>{{ product.description }}</TableCell>
-                                <TableCell>{{  }}</TableCell>
+                                <TableCell>{{ getCategoryName(product.category_id) }}</TableCell>
                                 <TableCell>{{ product.price }} MAD</TableCell>
                                 <TableCell>{{ product.quantity }}</TableCell>
                                 <TableCell class="flex gap-2">
@@ -219,16 +221,15 @@ const deleteConfirmed = async () => {
                     </Field>
                     <Field name="quantity" v-slot="{ field, meta }">
                         <FormLabel for="quantity">Quantité :</FormLabel>
-                        <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" />
+                        <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" v-model="productToEdit.quantity" />
                         <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                     </Field>
 
                     <Field name="category_id" v-slot="{ field, meta }">
-                        <FormLabel for="category_id">Catégorie :</FormLabel>
-                        <select v-bind="field" id="category_id" class="border p-2 rounded">
+                        <FormLabel>Catégorie</FormLabel>
+                        <select v-bind="field" class="border p-2 rounded">
                             <option value="">Sélectionnez une catégorie</option>
-                            <option value="homme">Homme</option>
-                            <option value="femme">Femme</option>
+                            <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                         </select>
                         <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                     </Field>
