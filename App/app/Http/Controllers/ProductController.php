@@ -32,11 +32,11 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            "name"        => 'required|string|max:255',
-            "description" => 'required|string',
-            "price"       => 'required|numeric', // Pour un float, utilisez numeric
-            "category_id" => 'required|exists:categories,id', // Vérifie que la catégorie existe
-            "quantity"    => 'sometimes|integer|min:1'
+            'name' => 'required|string|max:50',
+            'description' => 'required|string|max:100',
+            'price' => 'required|numeric|min:1|max:10000',
+            'quantity' => 'required|integer|min:1|max:1000',
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         $product = $this->productRepo->create($request);

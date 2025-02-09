@@ -4,7 +4,6 @@ import axios from "axios";
 
 export const useCategoriesStore = defineStore("categories", () => {
     const data = ref([]);
-    const category = ref(null);
 
     // Récupérer toutes les catégories
     const fetchCategories = async () => {
@@ -20,11 +19,11 @@ export const useCategoriesStore = defineStore("categories", () => {
     const fetchCategory = async (id) => {
         try {
             const response = await axios.get(`/api/categories/${id}`);
-            category.value = response.data.categorie;
+            return  response.data.category;
         } catch (error) {
             console.error("Erreur lors de la récupération de la catégorie :", error);
         }
     };
 
-    return { data, fetchCategories, category, fetchCategory };
+    return { data, fetchCategories, fetchCategory };
 });
