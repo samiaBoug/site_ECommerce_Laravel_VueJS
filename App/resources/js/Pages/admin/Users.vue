@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, User } from "lucide-vue-next"; // Icon components
+import { PlusCircle,File  } from "lucide-vue-next"; // Icon components
 
 const users = useUsersStore();
 
@@ -92,6 +92,10 @@ const deleteConfirmed = async () => {
                         <CardTitle>Utilisateurs</CardTitle>
                         <div class="flex items-center">
                             <div class="ml-auto flex items-center gap-2">
+                                <Button size="sm" variant="outline" class="h-7 gap-1">
+                                    <File class="h-3.5 w-3.5" />
+                                    <span class="sr-only sm:not-sr-only">Exporter</span>
+                                </Button>
                                 <Dialog v-model:open="isDialogOpen">
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">
@@ -122,7 +126,11 @@ const deleteConfirmed = async () => {
                                             </Field>
                                             <Field name="role" v-slot="{ field, meta }">
                                                 <FormLabel for="role">Rôle :</FormLabel>
-                                                <Input v-bind="field" type="text" placeholder="Rôle de l'utilisateur" id="role" />
+                                                <select v-bind="field" id="role" class="border rounded p-2 w-full">
+                                                    <option value="" disabled selected>Selectionner un rôle</option>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="client">Client</option>
+                                                </select>
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
                                             <Button type="submit" class="mt-4">Ajouter</Button>
@@ -164,14 +172,14 @@ const deleteConfirmed = async () => {
                 </Card>
             </main>
         </div>
-
         <!-- Dialogue de modification -->
         <Dialog v-model:open="isEditDialogOpen">
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Modifier l'utilisateur</DialogTitle>
-                    <DialogDescription>Modifiez les informations de l'utilisateur.</DialogDescription>
+                    <DialogTitle>Modifier un utilisateur</DialogTitle>
+                    <DialogDescription>Modifiez les informations du utilisateur.</DialogDescription>
                 </DialogHeader>
+                <!-- Utilisation d'un formulaire pour la modification -->
                 <Form @submit="onUpdateSubmit" :initial-values="userToEdit" class="space-y-2">
                     <Field name="name" v-slot="{ field, meta }">
                         <FormLabel for="edit-name">Nom d'utilisateur</FormLabel>
@@ -185,7 +193,11 @@ const deleteConfirmed = async () => {
                     </Field>
                     <Field name="role" v-slot="{ field, meta }">
                         <FormLabel for="role">Rôle :</FormLabel>
-                        <Input v-bind="field" type="text" v-model="userToEdit.role" id="role" />
+                        <select v-bind="field" id="role" class="border rounded p-2 w-full">
+                            <option value="" disabled selected>Selectionner un rôle</option>
+                            <option value="admin">Admin</option>
+                            <option value="client">Client</option>
+                        </select>
                         <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                     </Field>
                     <Button type="submit" class="mt-4">Modifier</Button>
@@ -193,15 +205,19 @@ const deleteConfirmed = async () => {
             </DialogContent>
         </Dialog>
 
-        <!-- Dialogue de suppression -->
+        <!-- Dialogue de confirmation pour suppression -->
         <Dialog v-model:open="isDeleteDialogOpen">
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Confirmer la suppression</DialogTitle>
-                    <DialogDescription>Voulez-vous vraiment supprimer cet utilisateur ?</DialogDescription>
+                    <DialogDescription>
+                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                    </DialogDescription>
                 </DialogHeader>
-                <Button @click="deleteConfirmed" class="mt-4 bg-red-600 text-white">Supprimer</Button>
-                <Button @click="isDeleteDialogOpen = false" class="mt-4">Annuler</Button>
+                <div class="flex justify-end gap-2 mt-4">
+                    <Button variant="outline" @click="isDeleteDialogOpen = false">Annuler</Button>
+                    <Button variant="destructive" @click="deleteConfirmed">Supprimer</Button>
+                </div>
             </DialogContent>
         </Dialog>
     </div>
