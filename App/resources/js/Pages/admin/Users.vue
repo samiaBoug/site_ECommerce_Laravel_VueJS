@@ -1,6 +1,7 @@
 <script setup>
+
 import { ref, onMounted } from "vue";
-import { useUsersStore } from "../../stores/UserStore"; // Assume you have a store for users import
+import { useUsersStore } from "../../stores/UserStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -11,7 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PlusCircle,File  } from "lucide-vue-next"; // Icon components
+
+// Icon components
+import { PlusCircle,File  } from "lucide-vue-next"; 
 
 const users = useUsersStore();
 
@@ -26,7 +29,6 @@ const formSchema = toTypedSchema(
 const { handleSubmit, reset } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Nouveaux états pour le dialogue de modification et de suppression
 const isEditDialogOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const userToEdit = ref(null);
@@ -39,16 +41,14 @@ onMounted(async () => {
 const onSubmit = async (values) => {
     try {
         await users.addUser(values);
-        // Close the dialog after successfully adding the user
         isDialogOpen.value = false;
-        // Reset the form after submission
     } catch (error) {
         console.error("Erreur lors de l'ajout de l'utilisateur:", error);
     }
 };
 
 const editUser = (user) => {
-    userToEdit.value = { ...user }; // création d'une copie
+    userToEdit.value = { ...user };
     isEditDialogOpen.value = true;
 };
 
@@ -96,6 +96,7 @@ const deleteConfirmed = async () => {
                                     <File class="h-3.5 w-3.5" />
                                     <span class="sr-only sm:not-sr-only">Exporter</span>
                                 </Button>
+                                
                                 <Dialog v-model:open="isDialogOpen">
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">
@@ -172,6 +173,7 @@ const deleteConfirmed = async () => {
                 </Card>
             </main>
         </div>
+
         <!-- Dialogue de modification -->
         <Dialog v-model:open="isEditDialogOpen">
             <DialogContent>
@@ -179,7 +181,6 @@ const deleteConfirmed = async () => {
                     <DialogTitle>Modifier un utilisateur</DialogTitle>
                     <DialogDescription>Modifiez les informations du utilisateur.</DialogDescription>
                 </DialogHeader>
-                <!-- Utilisation d'un formulaire pour la modification -->
                 <Form @submit="onUpdateSubmit" :initial-values="userToEdit" class="space-y-2">
                     <Field name="name" v-slot="{ field, meta }">
                         <FormLabel for="edit-name">Nom d'utilisateur</FormLabel>
@@ -205,7 +206,7 @@ const deleteConfirmed = async () => {
             </DialogContent>
         </Dialog>
 
-        <!-- Dialogue de confirmation pour suppression -->
+        <!-- Dialogue de suppression -->
         <Dialog v-model:open="isDeleteDialogOpen">
             <DialogContent>
                 <DialogHeader>
