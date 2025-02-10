@@ -1,6 +1,7 @@
 <script setup>
+
 import { ref, onMounted } from "vue";
-import { useUsersStore } from "../../stores/UserStore"; // Assume you have a store for users import
+import { useUsersStore } from "../../stores/UserStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -11,7 +12,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, User } from "lucide-vue-next"; // Icon components
+
+// Icon components
+import { PlusCircle,File  } from "lucide-vue-next"; 
 
 const users = useUsersStore();
 
@@ -26,7 +29,6 @@ const formSchema = toTypedSchema(
 const { handleSubmit, reset } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Nouveaux états pour le dialogue de modification et de suppression
 const isEditDialogOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const userToEdit = ref(null);
@@ -39,16 +41,14 @@ onMounted(async () => {
 const onSubmit = async (values) => {
     try {
         await users.addUser(values);
-        // Close the dialog after successfully adding the user
         isDialogOpen.value = false;
-        // Reset the form after submission
     } catch (error) {
         console.error("Erreur lors de l'ajout de l'utilisateur:", error);
     }
 };
 
 const editUser = (user) => {
-    userToEdit.value = { ...user }; // création d'une copie
+    userToEdit.value = { ...user };
     isEditDialogOpen.value = true;
 };
 
@@ -84,6 +84,7 @@ const deleteConfirmed = async () => {
 
 
 <template>
+    <!-- Affichage de la liste des utilisateurs -->
     <div class="flex min-h-screen w-full flex-col bg-muted/40">
         <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
             <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -92,6 +93,11 @@ const deleteConfirmed = async () => {
                         <CardTitle>Utilisateurs</CardTitle>
                         <div class="flex items-center">
                             <div class="ml-auto flex items-center gap-2">
+                                <Button size="sm" variant="outline" class="h-7 gap-1">
+                                    <File class="h-3.5 w-3.5" />
+                                    <span class="sr-only sm:not-sr-only">Exporter</span>
+                                </Button>
+                                
                                 <Dialog v-model:open="isDialogOpen">
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">
@@ -122,7 +128,11 @@ const deleteConfirmed = async () => {
                                             </Field>
                                             <Field name="role" v-slot="{ field, meta }">
                                                 <FormLabel for="role">Rôle :</FormLabel>
-                                                <Input v-bind="field" type="text" placeholder="Rôle de l'utilisateur" id="role" />
+                                                <select v-bind="field" id="role" class="border rounded p-2 w-full">
+                                                    <option value="" disabled selected>Selectionner un rôle</option>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="client">Client</option>
+                                                </select>
                                                 <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                                             </Field>
                                             <Button type="submit" class="mt-4">Ajouter</Button>
@@ -169,8 +179,8 @@ const deleteConfirmed = async () => {
         <Dialog v-model:open="isEditDialogOpen">
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Modifier l'utilisateur</DialogTitle>
-                    <DialogDescription>Modifiez les informations de l'utilisateur.</DialogDescription>
+                    <DialogTitle>Modifier un utilisateur</DialogTitle>
+                    <DialogDescription>Modifiez les informations du utilisateur.</DialogDescription>
                 </DialogHeader>
                 <Form @submit="onUpdateSubmit" :initial-values="userToEdit" class="space-y-2">
                     <Field name="name" v-slot="{ field, meta }">
@@ -185,7 +195,11 @@ const deleteConfirmed = async () => {
                     </Field>
                     <Field name="role" v-slot="{ field, meta }">
                         <FormLabel for="role">Rôle :</FormLabel>
-                        <Input v-bind="field" type="text" v-model="userToEdit.role" id="role" />
+                        <select v-bind="field" id="role" class="border rounded p-2 w-full">
+                            <option value="" disabled selected>Selectionner un rôle</option>
+                            <option value="admin">Admin</option>
+                            <option value="client">Client</option>
+                        </select>
                         <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
                     </Field>
                     <Button type="submit" class="mt-4">Modifier</Button>
@@ -198,10 +212,14 @@ const deleteConfirmed = async () => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Confirmer la suppression</DialogTitle>
-                    <DialogDescription>Voulez-vous vraiment supprimer cet utilisateur ?</DialogDescription>
+                    <DialogDescription>
+                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
+                    </DialogDescription>
                 </DialogHeader>
-                <Button @click="deleteConfirmed" class="mt-4 bg-red-600 text-white">Supprimer</Button>
-                <Button @click="isDeleteDialogOpen = false" class="mt-4">Annuler</Button>
+                <div class="flex justify-end gap-2 mt-4">
+                    <Button variant="outline" @click="isDeleteDialogOpen = false">Annuler</Button>
+                    <Button variant="destructive" @click="deleteConfirmed">Supprimer</Button>
+                </div>
             </DialogContent>
         </Dialog>
     </div>
