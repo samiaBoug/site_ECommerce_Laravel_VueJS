@@ -17,8 +17,8 @@ export const useUsersStore = defineStore("users", () => {
     const addUser = async (user) => {
         try {
             const response = await axios.post("/users", user);
-            data.value.push(response.data); // Add new user reactively
-            await fetchUsers(); // Fetch the updated user list from the server
+            data.value.push(response.data);
+            await fetchUsers(); 
         } catch (error) {
             console.error("Error adding user:", error);
         }
@@ -27,7 +27,7 @@ export const useUsersStore = defineStore("users", () => {
     const deleteUser = async (userId) => {
         try {
             await axios.delete(`/users/${userId}`);
-            data.value = data.value.filter((user) => user.id !== userId); // Remove user reactively
+            data.value = data.value.filter((user) => user.id !== userId); 
         } catch (error) {
             console.error("Error deleting user:", error);
         }
