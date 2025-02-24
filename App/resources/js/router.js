@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./Pages/admin/Home.vue";
+import Layout from "./Pages/admin/Layout.vue";
 import Products from "./Pages/admin/Product.vue";
 import Order from "./Pages/admin/Order.vue";
 import Users from "./Pages/admin/Users.vue";
@@ -11,9 +11,9 @@ const routes = [
         component: () => import("./Pages/public/HomeRoute.vue"),
     },
     {
-        path: "/dashboard",
-        component: Home,
-        redirect: "/dashboard/products",
+        path: "/admin",
+        component: Layout,
+        redirect: "/admin/products",
         children: [
             { path: "products", component: Products },
             { path: "users", component: Users },

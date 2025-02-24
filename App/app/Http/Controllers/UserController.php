@@ -59,7 +59,7 @@ class UserController extends Controller
         ]);
 
         $user = $this->userRepo->update($id, $validatedData);
-        
+
         if (!$user) {
             return response()->json([
                 'success' => false,

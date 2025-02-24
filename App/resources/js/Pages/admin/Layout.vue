@@ -91,19 +91,19 @@ const isSidebarOpen = ref(false);
             <aside class="hidden sm:flex w-64 flex-col border-r p-4">
                 <nav class="space-y-4">
                     <router-link
-                        to="/dashboard/products"
+                        to="/admin/products"
                         class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                     >
                         <Package class="h-5 w-5" /> Produits
                     </router-link>
                     <router-link
-                        to="/dashboard/users"
+                        to="/admin/users"
                         class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                     >
                         <Users class="h-5 w-5" /> Utilisateurs
                     </router-link>
                     <router-link
-                        to="/dashboard/orders"
+                        to="/admin/orders"
                         class="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
                     >
                         <ShoppingCart class="h-5 w-5" /> Commandes

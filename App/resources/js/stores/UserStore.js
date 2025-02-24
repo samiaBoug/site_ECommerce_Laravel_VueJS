@@ -7,7 +7,7 @@ export const useUsersStore = defineStore("users", () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get("/api/users");
+            const response = await axios.get("/users");
             data.value = response.data.users;
         } catch (error) {
             console.error("Error fetching users:", error);
