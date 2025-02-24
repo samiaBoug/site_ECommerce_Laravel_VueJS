@@ -52,6 +52,8 @@ class ProductRepository
             'name' => $request->input('name'),
             'description' => $request->input('description'),
             'price' => $request->input('price'),
+            'quantity' => $request->input('quantity'),
+            'category_id' => $request->input('category_id')
         ]);
     }
 
@@ -66,6 +68,8 @@ class ProductRepository
                 'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'price' => $request->input('price'),
+                'quantity' => $request->input('quantity'),
+                'category_id' => $request->input('category_id')
             ]);
             return $product;
         }

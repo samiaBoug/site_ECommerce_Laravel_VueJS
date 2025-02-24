@@ -21,6 +21,7 @@ import {
 } from "lucide-vue-next";
 
 const isSidebarOpen = ref(false);
+
 </script>
 
 <template>

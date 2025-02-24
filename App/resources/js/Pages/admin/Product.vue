@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useProductsStore } from "@/stores/ProductsStore";
+import { useCategoriesStore } from "@/stores/CategoriesStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -29,6 +30,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, File } from "lucide-vue-next";
 
 const products = useProductsStore();
+const categories = useCategoriesStore();
+
 
 const formSchema = toTypedSchema(
     z.object({
@@ -50,7 +53,6 @@ const formSchema = toTypedSchema(
 const { handleSubmit } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Nouveaux états pour le dialogue de modification et de suppression
 const isEditDialogOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const productToEdit = ref(null);
@@ -58,7 +60,15 @@ const productToDelete = ref(null);
 
 onMounted(async () => {
     await products.fetchProducts();
+    await categories.fetchCategories();
+
 });
+
+const getCategoryName = (categoryId) => {
+    const category = categories.data.find((cat) => cat.id === categoryId);
+    return category ? category.name : "Non défini";
+};
+
 
 const onSubmit = async (values) => {
     try {
@@ -284,7 +294,9 @@ const deleteConfirmed = async () => {
                             <TableRow>
                                 <TableHead>Nom</TableHead>
                                 <TableHead>Description</TableHead>
+                                <TableHead>Categorie</TableHead>
                                 <TableHead>Prix</TableHead>
+                                <TableHead>Quantite</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -295,7 +307,9 @@ const deleteConfirmed = async () => {
                             >
                                 <TableCell>{{ product.name }}</TableCell>
                                 <TableCell>{{ product.description }}</TableCell>
+                                <TableCell>{{ getCategoryName(product.category_id) }}</TableCell>
                                 <TableCell>{{ product.price }} MAD</TableCell>
+                                <TableCell>{{ product.quantity }}</TableCell>
                                 <TableCell class="flex gap-2">
                                     <Button
                                         variant="outline"
@@ -399,8 +413,7 @@ const deleteConfirmed = async () => {
                             class="border p-2 rounded"
                         >
                             <option value="">Sélectionnez une catégorie</option>
-                            <option value="homme">Homme</option>
-                            <option value="femme">Femme</option>
+                            <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                         </select>
                         <span
                             v-if="meta.touched && meta.error"

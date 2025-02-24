@@ -1,6 +1,7 @@
 <script setup>
+
 import { ref, onMounted } from "vue";
-import { useUsersStore } from "../../stores/UserStore"; // Assume you have a store for users import
+import { useUsersStore } from "../../stores/UserStore";
 import { useForm, Field, Form } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
@@ -25,7 +26,9 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { PlusCircle, User } from "lucide-vue-next"; // Icon components
+
+// Icon components
+import { PlusCircle,File  } from "lucide-vue-next"; 
 
 const users = useUsersStore();
 
@@ -46,7 +49,6 @@ const formSchema = toTypedSchema(
 const { handleSubmit, reset } = useForm({ validationSchema: formSchema });
 const isDialogOpen = ref(false);
 
-// Nouveaux états pour le dialogue de modification et de suppression
 const isEditDialogOpen = ref(false);
 const isDeleteDialogOpen = ref(false);
 const userToEdit = ref(null);
@@ -59,16 +61,14 @@ onMounted(async () => {
 const onSubmit = async (values) => {
     try {
         await users.addUser(values);
-        // Close the dialog after successfully adding the user
         isDialogOpen.value = false;
-        // Reset the form after submission
     } catch (error) {
         console.error("Erreur lors de l'ajout de l'utilisateur:", error);
     }
 };
 
 const editUser = (user) => {
-    userToEdit.value = { ...user }; // création d'une copie
+    userToEdit.value = { ...user };
     isEditDialogOpen.value = true;
 };
 
@@ -106,6 +106,7 @@ const deleteConfirmed = async () => {
 </script>
 
 <template>
+    <!-- Affichage de la liste des utilisateurs -->
     <div class="flex min-h-screen w-full flex-col bg-muted/40">
         <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
             <main
@@ -116,6 +117,11 @@ const deleteConfirmed = async () => {
                         <CardTitle>Utilisateurs</CardTitle>
                         <div class="flex items-center">
                             <div class="ml-auto flex items-center gap-2">
+                                <Button size="sm" variant="outline" class="h-7 gap-1">
+                                    <File class="h-3.5 w-3.5" />
+                                    <span class="sr-only sm:not-sr-only">Exporter</span>
+                                </Button>
+                                
                                 <Dialog v-model:open="isDialogOpen">
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">

@@ -47,7 +47,7 @@ class UserRepository
      */
     public function find($id)
     {
-        return $this->userModel::findOrFail($id); // Automatically throws a 404 error if not found
+        return $this->userModel::findOrFail($id);
     }
 
     /**

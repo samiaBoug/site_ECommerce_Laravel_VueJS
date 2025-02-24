@@ -42,7 +42,6 @@ class UserController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Utilisateur créé avec succès.',
             'user' => $user
         ],);
     }
