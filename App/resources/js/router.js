@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "./Pages/admin/Layout.vue"; // Le layout principal
 import Products from "./Pages/admin/Product.vue";
-import Users from "./Pages/admin/Users.vue"; // Import du composant Users
+import Users from "./Pages/admin/Users.vue";
 
 const routes = [
     {
@@ -10,7 +10,7 @@ const routes = [
         redirect: "/admin/products",
         children: [
             { path: "products", component: Products },
-            { path: "users", component: Users }, // Correctement placé dans les enfants de Home
+            { path: "users", component: Users }, 
         ]
     },
     {
