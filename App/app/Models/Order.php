@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Commande extends Model
+class Order extends Model
 {
-    protected $fillable = ['user_id', 'product_id', 'phone_telephone', 'quantity'];
+    protected $fillable = ['user_id', 'product_id', 'phone_number', 'quantity'];
 
-    protected $table = 'commandes';
+    protected $table = 'orders';
 
 
     public function user()

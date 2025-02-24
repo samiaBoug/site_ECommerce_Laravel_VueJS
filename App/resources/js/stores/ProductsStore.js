@@ -7,7 +7,7 @@ export const useProductsStore = defineStore("products", () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get("/api/products");
+            const response = await axios.get("/products");
             data.value = response.data.products;
         } catch (error) {
             console.error("Error fetching products:", error);
@@ -36,7 +36,10 @@ export const useProductsStore = defineStore("products", () => {
     };
     const updateProduct = async (productId, updatedData) => {
         try {
-            const response = await axios.put(`/products/${productId}`, updatedData);
+            const response = await axios.put(
+                `/products/${productId}`,
+                updatedData,
+            );
             return response.data;
         } catch (error) {
             console.error("Error updating product:", error);
@@ -44,5 +47,5 @@ export const useProductsStore = defineStore("products", () => {
         }
     };
 
-    return { data, fetchProducts, addProduct, deleteProduct , updateProduct};
+    return { data, fetchProducts, addProduct, deleteProduct, updateProduct };
 });

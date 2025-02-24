@@ -3,26 +3,16 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-
-Route::prefix('api')->group(function () {
-    Route::resource('products', ProductController::class);
-    Route::resource('users', UserController::class);
-    Route::resource('categories', CategoryController::class);
-});
-
-
-Route::get('/{vue_capture?}', function () {
-    return view('welcome');
-})->where('vue_capture', '[\/\w\.-]*');
-
-
-
 Route::resource('/products', ProductController::class);
+
 Route::resource('/users', UserController::class);
-Route::resource('/categories', CategoryController::class);
+
+Route::resource('orders', OrderController::class);
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -34,6 +24,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
+Route::get('/{vue_capture?}', function () {
+    return view('welcome');
+})->where('vue_capture', '[\/\w\.-]*');
 
 require __DIR__ . '/auth.php';

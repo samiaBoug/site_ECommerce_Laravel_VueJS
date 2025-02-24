@@ -1,37 +1,39 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "./Pages/admin/Layout.vue"; // Le layout principal
+import Layout from "./Pages/admin/Layout.vue";
 import Products from "./Pages/admin/Product.vue";
+import Order from "./Pages/admin/Order.vue";
 import Users from "./Pages/admin/Users.vue";
 
 const routes = [
     {
+        path: "/",
+        name: "home",
+        component: () => import("./Pages/public/HomeRoute.vue"),
+    },
+    {
         path: "/admin",
-        component: Home,
+        component: Layout,
         redirect: "/admin/products",
         children: [
             { path: "products", component: Products },
-            { path: "users", component: Users }, 
-        ]
+            { path: "users", component: Users },
+            { path: "orders", component: Order },
+        ],
     },
     {
         path: "/user/profile",
         name: "user.profile",
-        component: () => import("./Pages/user/userProfile.vue")
+        component: () => import("./Pages/user/userProfile.vue"),
     },
     {
-        path: "/register", // Correction de la faute de frappe
+        path: "/regiser",
         name: "register",
-        component: () => import("./Pages/auth/Register.vue")
+        component: () => import("./Pages/auth/Register.vue"),
     },
     {
         path: "/login",
         name: "login",
-        component: () => import("./Pages/auth/Login.vue")
-    },
-    {
-        path: "/",
-        name: "home",
-        component: () => import("./Pages/public/HomeRoute.vue")
+        component: () => import("./Pages/auth/Login.vue"),
     },
 ];
 

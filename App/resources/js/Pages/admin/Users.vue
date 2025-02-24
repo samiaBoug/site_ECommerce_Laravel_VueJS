@@ -9,8 +9,22 @@ import * as z from "zod";
 import { FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 
 // Icon components
@@ -20,10 +34,16 @@ const users = useUsersStore();
 
 const formSchema = toTypedSchema(
     z.object({
-        name: z.string().min(2).max(50, "Le nom d'utilisateur doit contenir entre 2 et 50 caractères"),
+        name: z
+            .string()
+            .min(2)
+            .max(
+                50,
+                "Le nom d'utilisateur doit contenir entre 2 et 50 caractères",
+            ),
         email: z.string().email("L'email doit être valide"),
         role: z.string().min(2).max(30, "Le rôle doit être valide"),
-    })
+    }),
 );
 
 const { handleSubmit, reset } = useForm({ validationSchema: formSchema });
@@ -58,7 +78,10 @@ const onUpdateSubmit = async (values) => {
         isEditDialogOpen.value = false;
         await users.fetchUsers();
     } catch (error) {
-        console.error("Erreur lors de la modification de l'utilisateur:", error);
+        console.error(
+            "Erreur lors de la modification de l'utilisateur:",
+            error,
+        );
     }
 };
 
@@ -82,12 +105,13 @@ const deleteConfirmed = async () => {
 };
 </script>
 
-
 <template>
     <!-- Affichage de la liste des utilisateurs -->
     <div class="flex min-h-screen w-full flex-col bg-muted/40">
         <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-            <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+            <main
+                class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8"
+            >
                 <Card>
                     <CardHeader>
                         <CardTitle>Utilisateurs</CardTitle>
@@ -102,40 +126,114 @@ const deleteConfirmed = async () => {
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">
                                             <PlusCircle class="h-3.5 w-3.5" />
-                                            <span class="sr-only sm:not-sr-only">Ajouter un utilisateur</span>
+                                            <span class="sr-only sm:not-sr-only"
+                                                >Ajouter un utilisateur</span
+                                            >
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            <DialogTitle>Ajouter un utilisateur</DialogTitle>
-                                            <DialogDescription>Remplissez les détails de l'utilisateur.</DialogDescription>
+                                            <DialogTitle
+                                                >Ajouter un
+                                                utilisateur</DialogTitle
+                                            >
+                                            <DialogDescription
+                                                >Remplissez les détails de
+                                                l'utilisateur.</DialogDescription
+                                            >
                                         </DialogHeader>
-                                        <Form @submit="onSubmit" class="space-y-2">
-                                            <Field name="name" v-slot="{ field, meta }">
-                                                <FormLabel for="name">Nom d'utilisateur</FormLabel>
-                                                <Input v-bind="field" type="text" placeholder="Nom d'utilisateur" id="name" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                        <Form
+                                            @submit="onSubmit"
+                                            class="space-y-2"
+                                        >
+                                            <Field
+                                                name="name"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel for="name"
+                                                    >Nom
+                                                    d'utilisateur</FormLabel
+                                                >
+                                                <Input
+                                                    v-bind="field"
+                                                    type="text"
+                                                    placeholder="Nom d'utilisateur"
+                                                    id="name"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="email" v-slot="{ field, meta }">
+                                            <Field
+                                                name="email"
+                                                v-slot="{ field, meta }"
+                                            >
                                                 <FormLabel>Email</FormLabel>
-                                                <Input v-bind="field" type="email" placeholder="Email de l'utilisateur" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                                <Input
+                                                    v-bind="field"
+                                                    type="email"
+                                                    placeholder="Email de l'utilisateur"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="password" v-slot="{ field, meta }">
-                                                <FormLabel>Mot de passe</FormLabel>
-                                                <Input v-bind="field" type="password" placeholder="Mot de passe de l'utilisateur" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            <Field
+                                                name="password"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel
+                                                    >Mot de passe</FormLabel
+                                                >
+                                                <Input
+                                                    v-bind="field"
+                                                    type="password"
+                                                    placeholder="Mot de passe de l'utilisateur"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="role" v-slot="{ field, meta }">
-                                                <FormLabel for="role">Rôle :</FormLabel>
-                                                <select v-bind="field" id="role" class="border rounded p-2 w-full">
-                                                    <option value="" disabled selected>Selectionner un rôle</option>
-                                                    <option value="admin">Admin</option>
-                                                    <option value="client">Client</option>
-                                                </select>
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            <Field
+                                                name="role"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel for="role"
+                                                    >Rôle :</FormLabel
+                                                >
+                                                <Input
+                                                    v-bind="field"
+                                                    type="text"
+                                                    placeholder="Rôle de l'utilisateur"
+                                                    id="role"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Button type="submit" class="mt-4">Ajouter</Button>
+                                            <Button type="submit" class="mt-4"
+                                                >Ajouter</Button
+                                            >
                                         </Form>
                                     </DialogContent>
                                 </Dialog>
@@ -164,7 +262,11 @@ const deleteConfirmed = async () => {
                                     >
                                         Modifier
                                     </Button>
-                                    <Button variant="outline" @click="confirmDelete(user)" class="bg-red-500 hover:bg-red-600 text-white">
+                                    <Button
+                                        variant="outline"
+                                        @click="confirmDelete(user)"
+                                        class="bg-red-500 hover:bg-red-600 text-white"
+                                    >
                                         Supprimer
                                     </Button>
                                 </TableCell>
@@ -179,28 +281,57 @@ const deleteConfirmed = async () => {
         <Dialog v-model:open="isEditDialogOpen">
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Modifier un utilisateur</DialogTitle>
-                    <DialogDescription>Modifiez les informations du utilisateur.</DialogDescription>
+                    <DialogTitle>Modifier l'utilisateur</DialogTitle>
+                    <DialogDescription
+                        >Modifiez les informations de
+                        l'utilisateur.</DialogDescription
+                    >
                 </DialogHeader>
-                <Form @submit="onUpdateSubmit" :initial-values="userToEdit" class="space-y-2">
+                <Form
+                    @submit="onUpdateSubmit"
+                    :initial-values="userToEdit"
+                    class="space-y-2"
+                >
                     <Field name="name" v-slot="{ field, meta }">
                         <FormLabel for="edit-name">Nom d'utilisateur</FormLabel>
-                        <Input v-bind="field" type="text" v-model="userToEdit.name" id="edit-name" />
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="text"
+                            v-model="userToEdit.name"
+                            id="edit-name"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Field name="email" v-slot="{ field, meta }">
                         <FormLabel>Email</FormLabel>
-                        <Input v-bind="field" type="email" v-model="userToEdit.email" />
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="email"
+                            v-model="userToEdit.email"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Field name="role" v-slot="{ field, meta }">
                         <FormLabel for="role">Rôle :</FormLabel>
-                        <select v-bind="field" id="role" class="border rounded p-2 w-full">
-                            <option value="" disabled selected>Selectionner un rôle</option>
-                            <option value="admin">Admin</option>
-                            <option value="client">Client</option>
-                        </select>
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="text"
+                            v-model="userToEdit.role"
+                            id="role"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Button type="submit" class="mt-4">Modifier</Button>
                 </Form>
@@ -212,14 +343,19 @@ const deleteConfirmed = async () => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Confirmer la suppression</DialogTitle>
-                    <DialogDescription>
-                        Êtes-vous sûr de vouloir supprimer cet utilisateur ?
-                    </DialogDescription>
+                    <DialogDescription
+                        >Voulez-vous vraiment supprimer cet utilisateur
+                        ?</DialogDescription
+                    >
                 </DialogHeader>
-                <div class="flex justify-end gap-2 mt-4">
-                    <Button variant="outline" @click="isDeleteDialogOpen = false">Annuler</Button>
-                    <Button variant="destructive" @click="deleteConfirmed">Supprimer</Button>
-                </div>
+                <Button
+                    @click="deleteConfirmed"
+                    class="mt-4 bg-red-600 text-white"
+                    >Supprimer</Button
+                >
+                <Button @click="isDeleteDialogOpen = false" class="mt-4"
+                    >Annuler</Button
+                >
             </DialogContent>
         </Dialog>
     </div>

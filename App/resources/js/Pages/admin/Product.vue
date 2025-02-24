@@ -9,8 +9,22 @@ import * as z from "zod";
 import { FormLabel } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusCircle, File } from "lucide-vue-next";
@@ -21,10 +35,19 @@ const categories = useCategoriesStore();
 
 const formSchema = toTypedSchema(
     z.object({
-        name: z.string().min(2).max(50, "Le nom doit contenir entre 2 et 50 caractères"),
-        description: z.string().min(2).max(100, "La description doit contenir entre 2 et 100 caractères"),
-        price: z.number().min(1).max(10000, "Le prix doit être entre 1 et 10 000"),
-    })
+        name: z
+            .string()
+            .min(2)
+            .max(50, "Le nom doit contenir entre 2 et 50 caractères"),
+        description: z
+            .string()
+            .min(2)
+            .max(100, "La description doit contenir entre 2 et 100 caractères"),
+        price: z
+            .number()
+            .min(1)
+            .max(10000, "Le prix doit être entre 1 et 10 000"),
+    }),
 );
 
 const { handleSubmit } = useForm({ validationSchema: formSchema });
@@ -99,59 +122,167 @@ const deleteConfirmed = async () => {
 <template>
     <div class="flex min-h-screen w-full flex-col bg-muted/40">
         <div class="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-            <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+            <main
+                class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8"
+            >
                 <Card>
                     <CardHeader>
                         <CardTitle>Produits</CardTitle>
                         <div class="flex items-center">
                             <div class="ml-auto flex items-center gap-2">
-                                <Button size="sm" variant="outline" class="h-7 gap-1">
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    class="h-7 gap-1"
+                                >
                                     <File class="h-3.5 w-3.5" />
-                                    <span class="sr-only sm:not-sr-only">Exporter</span>
+                                    <span class="sr-only sm:not-sr-only"
+                                        >Exporter</span
+                                    >
                                 </Button>
                                 <Dialog v-model:open="isDialogOpen">
                                     <DialogTrigger as-child>
                                         <Button size="sm" class="h-7 gap-1">
                                             <PlusCircle class="h-3.5 w-3.5" />
-                                            <span class="sr-only sm:not-sr-only">Ajouter un produit</span>
+                                            <span class="sr-only sm:not-sr-only"
+                                                >Ajouter un produit</span
+                                            >
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent>
                                         <DialogHeader>
-                                            <DialogTitle>Ajouter un produit</DialogTitle>
-                                            <DialogDescription>Remplissez les détails du produit.</DialogDescription>
+                                            <DialogTitle
+                                                >Ajouter un produit</DialogTitle
+                                            >
+                                            <DialogDescription
+                                                >Remplissez les détails du
+                                                produit.</DialogDescription
+                                            >
                                         </DialogHeader>
-                                        <Form @submit="onSubmit" class="space-y-2">
-                                            <Field name="name" v-slot="{ field, meta }">
-                                                <FormLabel for="name">Nom du produit</FormLabel>
-                                                <Input v-bind="field" type="text" placeholder="Nom du produit" id="name" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                        <Form
+                                            @submit="onSubmit"
+                                            class="space-y-2"
+                                        >
+                                            <Field
+                                                name="name"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel for="name"
+                                                    >Nom du produit</FormLabel
+                                                >
+                                                <Input
+                                                    v-bind="field"
+                                                    type="text"
+                                                    placeholder="Nom du produit"
+                                                    id="name"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="description" v-slot="{ field, meta }">
-                                                <FormLabel>Description</FormLabel>
-                                                <Textarea v-bind="field" placeholder="Description du produit" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            <Field
+                                                name="description"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel
+                                                    >Description</FormLabel
+                                                >
+                                                <Textarea
+                                                    v-bind="field"
+                                                    placeholder="Description du produit"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="price" v-slot="{ field, meta }">
+                                            <Field
+                                                name="price"
+                                                v-slot="{ field, meta }"
+                                            >
                                                 <FormLabel>Prix</FormLabel>
-                                                <Input v-bind="field" type="number" placeholder="Prix du produit" />
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                                <Input
+                                                    v-bind="field"
+                                                    type="number"
+                                                    placeholder="Prix du produit"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="quantity" v-slot="{ field, meta }">
-                                                <FormLabel>Quantité</FormLabel>
-                                                <Input v-bind="field" type="number" placeholder="Quantité" />
-                                            <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                            <Field
+                                                name="quantity"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel for="quantity"
+                                                    >Quantité :</FormLabel
+                                                >
+                                                <Input
+                                                    v-bind="field"
+                                                    type="number"
+                                                    placeholder="Quantité du produit"
+                                                    id="quantity"
+                                                />
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <Field name="category_id" v-slot="{ field, meta }">
-                                                <FormLabel>Catégorie</FormLabel>
-                                                <select v-bind="field" class="border p-2 rounded">
-                                                    <option value="">Sélectionnez une catégorie</option>
-                                                    <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+
+                                            <Field
+                                                name="category_id"
+                                                v-slot="{ field, meta }"
+                                            >
+                                                <FormLabel for="category_id"
+                                                    >Catégorie :</FormLabel
+                                                >
+                                                <select
+                                                    v-bind="field"
+                                                    id="category_id"
+                                                    class="border p-2 rounded"
+                                                >
+                                                    <option value="">
+                                                        Sélectionnez une
+                                                        catégorie
+                                                    </option>
+                                                    <option value="homme">
+                                                        Homme
+                                                    </option>
+                                                    <option value="femme">
+                                                        Femme
+                                                    </option>
                                                 </select>
-                                                <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                                                <span
+                                                    v-if="
+                                                        meta.touched &&
+                                                        meta.error
+                                                    "
+                                                    class="text-red-500"
+                                                    >{{ meta.error }}</span
+                                                >
                                             </Field>
-                                            <br>
-                                            <Button type="submit" class="mt-4">Ajouter</Button>
+                                            <br />
+                                            <Button type="submit" class="mt-4"
+                                                >Ajouter</Button
+                                            >
                                         </Form>
                                     </DialogContent>
                                 </Dialog>
@@ -170,7 +301,10 @@ const deleteConfirmed = async () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            <TableRow v-for="product in products.data" :key="product.id">
+                            <TableRow
+                                v-for="product in products.data"
+                                :key="product.id"
+                            >
                                 <TableCell>{{ product.name }}</TableCell>
                                 <TableCell>{{ product.description }}</TableCell>
                                 <TableCell>{{ getCategoryName(product.category_id) }}</TableCell>
@@ -184,7 +318,11 @@ const deleteConfirmed = async () => {
                                     >
                                         Modifier
                                     </Button>
-                                    <Button variant="outline" @click="confirmDelete(product)" class="bg-red-500 hover:bg-red-600 text-white">
+                                    <Button
+                                        variant="outline"
+                                        @click="confirmDelete(product)"
+                                        class="bg-red-500 hover:bg-red-600 text-white"
+                                    >
                                         Supprimer
                                     </Button>
                                 </TableCell>
@@ -200,42 +338,96 @@ const deleteConfirmed = async () => {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Modifier le produit</DialogTitle>
-                    <DialogDescription>Modifiez les informations du produit.</DialogDescription>
+                    <DialogDescription
+                        >Modifiez les informations du
+                        produit.</DialogDescription
+                    >
                 </DialogHeader>
                 <!-- Utilisation d'un formulaire pour la modification -->
-                <Form @submit="onUpdateSubmit" :initial-values="productToEdit" class="space-y-2">
+                <Form
+                    @submit="onUpdateSubmit"
+                    :initial-values="productToEdit"
+                    class="space-y-2"
+                >
                     <Field name="name" v-slot="{ field, meta }">
                         <FormLabel for="edit-name">Nom du produit</FormLabel>
-                        <Input v-bind="field" type="text" v-model="productToEdit.name" id="edit-name" />
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="text"
+                            v-model="productToEdit.name"
+                            id="edit-name"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Field name="description" v-slot="{ field, meta }">
                         <FormLabel>Description</FormLabel>
-                        <Textarea v-bind="field" placeholder="Description du produit" v-model="productToEdit.description"/>
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Textarea
+                            v-bind="field"
+                            placeholder="Description du produit"
+                            v-model="productToEdit.description"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Field name="price" v-slot="{ field, meta }">
                         <FormLabel>Prix</FormLabel>
-                        <Input v-bind="field" type="number" placeholder="Prix du produit" v-model="productToEdit.price"/>
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="number"
+                            placeholder="Prix du produit"
+                            v-model="productToEdit.price"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
                     <Field name="quantity" v-slot="{ field, meta }">
                         <FormLabel for="quantity">Quantité :</FormLabel>
-                        <Input v-bind="field" type="number" placeholder="Quantité du produit" id="quantity" v-model="productToEdit.quantity" />
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <Input
+                            v-bind="field"
+                            type="number"
+                            placeholder="Quantité du produit"
+                            id="quantity"
+                        />
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
 
                     <Field name="category_id" v-slot="{ field, meta }">
-                        <FormLabel>Catégorie</FormLabel>
-                        <select v-bind="field" class="border p-2 rounded">
+                        <FormLabel for="category_id">Catégorie :</FormLabel>
+                        <select
+                            v-bind="field"
+                            id="category_id"
+                            class="border p-2 rounded"
+                        >
                             <option value="">Sélectionnez une catégorie</option>
                             <option v-for="cat in categories.data" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                         </select>
-                        <span v-if="meta.touched && meta.error" class="text-red-500">{{ meta.error }}</span>
+                        <span
+                            v-if="meta.touched && meta.error"
+                            class="text-red-500"
+                            >{{ meta.error }}</span
+                        >
                     </Field>
 
                     <div class="flex justify-end gap-2 mt-4">
-                        <Button variant="outline" @click="isEditDialogOpen = false">Annuler</Button>
+                        <Button
+                            variant="outline"
+                            @click="isEditDialogOpen = false"
+                            >Annuler</Button
+                        >
                         <Button type="submit">Modifier</Button>
                     </div>
                 </Form>
@@ -252,8 +444,14 @@ const deleteConfirmed = async () => {
                     </DialogDescription>
                 </DialogHeader>
                 <div class="flex justify-end gap-2 mt-4">
-                    <Button variant="outline" @click="isDeleteDialogOpen = false">Annuler</Button>
-                    <Button variant="destructive" @click="deleteConfirmed">Supprimer</Button>
+                    <Button
+                        variant="outline"
+                        @click="isDeleteDialogOpen = false"
+                        >Annuler</Button
+                    >
+                    <Button variant="destructive" @click="deleteConfirmed"
+                        >Supprimer</Button
+                    >
                 </div>
             </DialogContent>
         </Dialog>
