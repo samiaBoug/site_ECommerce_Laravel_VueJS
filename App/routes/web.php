@@ -8,9 +8,6 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::resource('/products', ProductController::class);
-
-Route::resource('/users', UserController::class);
-
 Route::resource('orders', OrderController::class);
 
 
