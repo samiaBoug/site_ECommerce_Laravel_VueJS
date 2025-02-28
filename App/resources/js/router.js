@@ -23,10 +23,10 @@ const routes = [
     {
         path: "/user/profile",
         name: "user.profile",
-        component: () => import("./Pages/user/userProfile.vue"),
+        component: () => import("./Pages/user/userProfile.vue"),   meta: { requiresAuth: true }  
     },
     {
-        path: "/regiser",
+        path: "/register",
         name: "register",
         component: () => import("./Pages/auth/Register.vue"),
     },

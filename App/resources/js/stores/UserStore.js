@@ -33,15 +33,16 @@ export const useUsersStore = defineStore("users", () => {
         }
     };
 
-    const updateUser = async (userId, updatedData) => {
-        try {
-            const response = await axios.put(`/users/${userId}`, updatedData);
-            return response.data;
-        } catch (error) {
-            console.error("Error updating user:", error);
-            throw error;
-        }
-    };
+  const updateProfile = async (name, email, password) => {
+    try {
+        const response = await axios.put("api/user/update", { name, email, password });
+        user.value = response.data.user;
+        console.log("Profile updated successfully!");
+    } catch (error) {
+        console.error("Profile update failed:", error.response?.data || error.message);
+        throw error;
+    }
+};
 
     return { data, fetchUsers, addUser, deleteUser, updateUser };
 });

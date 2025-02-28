@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
 import { useRouter } from "vue-router";
 
 // Import the components we need
@@ -16,30 +15,27 @@ import {
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const email = ref("");
-const password = ref("");
+import { useAuthStore } from '../../stores/authStore/auth';
+const authStore = useAuthStore();
 const router = useRouter();
+const email = ref('');
+const password = ref('');
 
-const login = async () => {
-    try {
-        // Make login request to Laravel Breeze
-        await axios.post("/login", {
-            email: email.value,
-            password: password.value,
-        });
+const handleLogin = async () => {
+  try {
+    const role = await authStore.login(email.value, password.value);
 
-        // Redirect to dashboard after successful login
-        router.push("/dashboard");
-    } catch (error) {
-        console.error("Login failed:", error);
+    alert("Logged in successfully!");
 
-        if (error.response && error.response.status === 422) {
-            alert("Invalid credentials. Please check your email and password.");
-        } else {
-            alert("Something went wrong. Please try again later.");
-        }
+    // Redirect based on role
+    if (role === "admin") {
+      router.push("/admin/products"); // Redirect to admin panel
+    } else {
+      router.push("/user/profile"); // Redirect to user profile
     }
+  } catch (error) {
+    alert("Login failed. Please check your credentials.");
+  }
 };
 </script>
 
@@ -55,7 +51,7 @@ const login = async () => {
                 >
             </CardHeader>
             <CardContent>
-                <Form @submit="login()" class="grid gap-4">
+                <Form @submit="handleLogin" class="grid gap-4">
                     <div class="grid gap-2">
                         <Label for="email">Email</Label>
                         <Input

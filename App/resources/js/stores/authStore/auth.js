@@ -1,51 +1,126 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import { ref } from "vue";
 
-export const useAuthStore = defineStore("auth", {
-    state: () => ({
-        user: null, // Holds the authenticated user data
-    }),
-    actions: {
-        // Fetch the authenticated user
-        async fetchUser() {
-            try {
-                const response = await axios.get("/user");
-                this.user = response.data;
-            } catch {
-                this.user = null;
-            }
-        },
+export const useAuthStore = defineStore("auth", () => {
+    const user = ref(null);
+    const token = ref(localStorage.getItem("token") || null);
+    const isAuthenticated = ref(!!token.value);
 
-        // Login action
-        async login(credentials) {
-            try {
-                await axios.post("/login", credentials);
-                await this.fetchUser(); // Fetch the user after login
-            } catch (error) {
-                throw error; // Let the caller handle the error
-            }
-        },
+    const login = async (email, password) => {
+        try {
+            const response = await axios.post("api/login", { email, password });
+    
+            user.value = response.data.user;
+            token.value = response.data.token;
+            isAuthenticated.value = true;
+    
+            localStorage.setItem("token", token.value);
+            axios.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
+    
+            console.log("Logged in successfully!");
+    
+            // Ensure the role is returned correctly
+            return user.value?.role; // Access role safely
+        } catch (error) {
+            console.error("Login failed:", error.response?.data || error.message);
+            throw error;
+        }
+    };
 
-        // Logout action
-        async logout() {
-            try {
-                await axios.post("/logout");
-                this.user = null; // Clear user state after logout
-                window.location.href = "/";
-            } catch (error) {
-                console.error("Logout failed:", error);
-                throw error;
-            }
-        },
+    const register = async (name, email, password, passwordConfirmation) => {
+        try {
+            const response = await axios.post("api/register", {
+                name,
+                email,
+                password,
+                password_confirmation: passwordConfirmation,
+            });
 
-        // Register action
-        async register(credentials) {
-            try {
-                await axios.post("/register", credentials); // Register the user
-                await this.fetchUser(); // Automatically log them in after registration
-            } catch (error) {
-                throw error; // Let the caller handle the error
+            user.value = response.data.user;
+            token.value = response.data.token;
+            isAuthenticated.value = true;
+
+            localStorage.setItem("token", token.value);
+
+            axios.defaults.headers.common["Authorization"] =
+                `Bearer ${token.value}`;
+
+            console.log("Registered successfully!");
+        } catch (error) {
+            console.error(
+                "Registration failed:",
+                error.response?.data || error.message,
+            );
+            throw error;
+        }
+    };
+
+    const logout = async () => {
+        try {
+            await axios.post("api/logout", null, {
+                headers: {
+                    Authorization: `Bearer ${token.value}`,
+                },
+            });
+
+            user.value = null;
+            token.value = null;
+            isAuthenticated.value = false;
+
+            localStorage.removeItem("token");
+            delete axios.defaults.headers.common["Authorization"];
+
+            console.log("Logged out successfully!");
+        } catch (error) {
+            console.error(
+                "Logout failed:",
+                error.response?.data || error.message,
+            );
+            throw error;
+        }
+    };
+    const updateProfile = async (name, email, password) => {
+        try {
+            const response = await axios.put("/api/user/update", { name, email, password });
+            user.value = response.data.user;
+            console.log("Profile updated successfully!");
+        } catch (error) {
+            console.error("Profile update failed:", error.response?.data || error.message);
+            throw error;
+        }
+    };
+    const fetchUser = async () => {
+        try {
+            if (!token.value) {
+                throw new Error("No token found");
             }
-        },
-    },
+
+            apiClient.defaults.headers.common["Authorization"] =
+                `Bearer ${token.value}`;
+
+            const response = await axios.get("api/user");
+            user.value = response.data;
+            isAuthenticated.value = true;
+        } catch (error) {
+            console.error(
+                "Failed to fetch user:",
+                error.response?.data || error.message,
+            );
+            user.value = null;
+            isAuthenticated.value = false;
+            localStorage.removeItem("token"); 
+        }
+    };
+
+    return {
+        user,
+        token,
+        isAuthenticated,
+        login,
+        register,
+        updateProfile,
+        logout,
+        fetchUser,
+    };
 });
